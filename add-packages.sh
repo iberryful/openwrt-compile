@@ -13,6 +13,8 @@ svn export https://github.com/QiuSimons/openwrt-mos/trunk/v2ray-geodata $PKG_DIR
 
 git clone -b master --depth 1 https://github.com/tty228/luci-app-serverchan.git $PKG_DIR/luci-app-serverchan
 git clone https://github.com/fw876/helloworld.git $PKG_DIR/helloworld
+cp -r $PKG_DIR/helloworld/* $PKG_DIR
+rm -rf $PKG_DIR/helloworld
 
 git clone https://github.com/rufengsuixing/luci-app-adguardhome.git $PKG_DIR/luci-app-adguardhome
 svn export https://github.com/vernesong/OpenClash/branches/dev/luci-app-openclash $PKG_DIR/luci-app-openclash
