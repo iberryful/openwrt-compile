@@ -120,27 +120,36 @@ jobs:
       run: |
         echo "::set-output name=release_tag::$(date +"%Y.%m.%d-%H%M")"
         echo "::set-output name=status::success"
-
-    - name: Upload binaries to release
-      uses: svenstaro/upload-release-action@v2
+        
+    - name: Organize files
+      id: organize
+      run: |
+        rm -rf ./artifact/
+        mkdir -p ./artifact/
+        mv openwrt/bin/targets/x86/64/*combined-efi.img* ./artifact/
+        cd ./artifact/
+        ls -Ahl
+        gzip -d *.gz && exit 0
+        gzip --best *.img
+        ls -Ahl
+        sha256sum openwrt*x86* | tee X86-$(date +%Y-%m-%d)-${{ env.latest_release }}.sha256sum
+        zip X86-$(date +%Y-%m-%d)-${{ env.latest_release }}-ext4.zip *ext4-combined*
+        zip X86-$(date +%Y-%m-%d)-${{ env.latest_release }}-sfs.zip *squashfs-combined*
+        ls -Ahl
+    - name: Upload artifact
+      uses: actions/upload-artifact@main
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: openwrt/bin/targets/x86/64/*
-        tag: ${{ steps.tag.outputs.release_tag }}
-        overwrite: true
-        file_glob: true
+        name: OpenWRT_${{ steps.tag.outputs.release_tag }}
+        path: ./artifact/
 
-#     - name: Delete workflow runs
-#       uses: GitRML/delete-workflow-runs@main
-#       with:
-#         retain_days: 1
-#         keep_minimum_runs: 3
-
-#     - name: Remove old Releases
-#       uses: dev-drprasad/delete-older-releases@v0.1.0
-#       if: env.UPLOAD_RELEASE == 'true' && !cancelled()
-#       with:
-#         keep_latest: 3
-#         delete_tags: true
-#       env:
-#         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create release
+      id: create_release
+      uses: ncipollo/release-action@main
+      with:
+        name: OpenWRT-${{ steps.tag.outputs.release_tag }}
+        allowUpdates: true
+        prerelease: false
+        tag: ${{ env.latest_release }}
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: ./artifact/*.zip
