@@ -132,9 +132,9 @@ jobs:
         gzip -d *.gz && exit 0
         gzip --best *.img
         ls -Ahl
-        sha256sum openwrt*x86* | tee X86-$(date +%Y-%m-%d)-${{ env.latest_release }}.sha256sum
-        zip X86-$(date +%Y-%m-%d)-${{ env.latest_release }}-ext4.zip *ext4-combined*
-        zip X86-$(date +%Y-%m-%d)-${{ env.latest_release }}-sfs.zip *squashfs-combined*
+        sha256sum openwrt*x86* | tee X86-$(date +%Y-%m-%d).sha256sum
+        zip X86-$(date +%Y-%m-%d)-ext4.zip *ext4-combined*
+        zip X86-$(date +%Y-%m-%d)-sfs.zip *squashfs-combined*
         ls -Ahl
     - name: Upload artifact
       uses: actions/upload-artifact@main
@@ -149,7 +149,7 @@ jobs:
         name: OpenWRT-${{ steps.tag.outputs.release_tag }}
         allowUpdates: true
         prerelease: false
-        tag: ${{ env.latest_release }}
+        tag: ${{ steps.tag.outputs.release_tag }}
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
         artifacts: ./artifact/*.zip
