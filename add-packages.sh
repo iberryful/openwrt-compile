@@ -1,28 +1,25 @@
-#!/bin/bash
+#!/bin/bash -e
 
-
+cd openwrt
 
 PKG_DIR=package/addon
 mkdir -p $PKG_DIR
 
 cp -r ../custom-packages package/
 
-#rm -rf package/feeds/packages/mosdns
-#rm -rf package/feeds/packages/v2ray-geodata
-#rm -rf package/feeds/packages/luci-app-mosdns
-#rm -rf package/feeds/packages/luci-app-serverchan
 
-#svn export https://github.com/QiuSimons/openwrt-mos/trunk/mosdns $PKG_DIR/mosdns
-#svn export https://github.com/QiuSimons/openwrt-mos/trunk/luci-app-mosdns $PKG_DIR/luci-app-mosdns
-#svn export https://github.com/QiuSimons/openwrt-mos/trunk/v2ray-geodata $PKG_DIR/v2ray-geodata
 
-#git clone -b master --depth 1 https://github.com/tty228/luci-app-serverchan.git $PKG_DIR/luci-app-serverchan
+svn export --force https://github.com/coolsnowwolf/lede/branches/master/package/lean/autocore $PKG_DIR/autocore 
+git clone https://github.com/rufengsuixing/luci-app-adguardhome.git $PKG_DIR/luci-app-adguardhome
+svn export --force https://github.com/vernesong/OpenClash/branches/dev/luci-app-openclash $PKG_DIR/luci-app-openclash
+git clone https://github.com/tty228/luci-app-serverchan.git $PKG_DIR/luci-app-serverchan
+#svn export --force https://github.com/coolsnowwolf/lede/branches/master/package/lean/r8125 $PKG_DIR/r8125
+
+
 git clone https://github.com/fw876/helloworld.git $PKG_DIR/helloworld
 cp -r $PKG_DIR/helloworld/* $PKG_DIR
 rm -rf $PKG_DIR/helloworld
 
-git clone https://github.com/rufengsuixing/luci-app-adguardhome.git $PKG_DIR/luci-app-adguardhome
-svn export https://github.com/vernesong/OpenClash/branches/dev/luci-app-openclash $PKG_DIR/luci-app-openclash
 
 
 mkdir -p files
@@ -40,4 +37,5 @@ tar -zxf /tmp/speedtest.tgz -C usr/bin/
 chmod +x usr/bin/speedtest
 rm usr/bin/speedtest.*
 
+cd ..
 cd ..

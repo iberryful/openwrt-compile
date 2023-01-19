@@ -22,10 +22,10 @@ define Package/ensure-deps/install
 endef
 
 define Package/ensure-deps
-  SECTION:=base
-  CATEGORY:=Base system
-  DEPENDS:=+iperf3 +tcpdump +openssh-sftp-server +ipv6helper +tailscaled +tailscale \
-            +python3 +python3-pip +vim-full +mwan3 +zsh
+  DEPENDS:=+iperf3 +tcpdump +openssh-sftp-server +tailscaled +tailscale dnsmasq-full \
+            +python3 +python3-pip +vim-full +mwan3 +zsh \
+            +luci-app-serverchan +luci-app-openclash +luci-app-adguardhome \
+            +luci-app-ssr-plus +luci-theme-material
   TITLE:=Ensure deps
   URL:=http://openwrt.org/
   VERSION:=$(PKG_VERSION)-$(PKG_RELEASE)
